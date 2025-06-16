@@ -1,0 +1,5 @@
+:host {
+  display: block;
+  overflow: visible !important;
+  z-index: 9999; /* para que no quede “detrás” */
+}

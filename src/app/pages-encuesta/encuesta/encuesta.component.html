@@ -1,0 +1,33 @@
+<spinner></spinner>
+<div class="container py-4">
+    <h2 class="mb-4">Encuesta rápida</h2>
+    <form (ngSubmit)="onSubmit()" #encuestaForm="ngForm">
+        @for (pregunta of preguntas; track $index) {
+        <div class="card mb-3">
+            <div class="card-body">
+                <p class="mb-2"><strong>{{ ($index+1)+'. ¿'+pregunta.Descripcion+'?'}}</strong></p>
+ 
+                <div class="btn-group" role="group" aria-label="Puntuación">
+                    @for (opcion of calificaciones; track $index) {
+                    <label class="btn btn-outline-primary" [class.active]="pregunta.puntuacion === opcion">
+ 
+                        <input type="radio" name="score-{{ pregunta.Secuencial }}" [value]="opcion"
+                            [(ngModel)]="pregunta.puntuacion" required>
+                        {{ opcion }}
+                    </label>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+        <!-- botón sólo si NO se ha enviado -->
+        <button *ngIf="!submitted" type="submit" class="btn btn-success" [disabled]="!encuestaForm.form.valid">
+            Guardar respuestas
+        </button>
+ 
+        <!-- mensaje cuando ya está enviado -->
+        <p *ngIf="submitted" class="text-success mt-3">
+            ¡Gracias! Tus respuestas ya fueron enviadas.
+        </p>
+    </form>
+</div>

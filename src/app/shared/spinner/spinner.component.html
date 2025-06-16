@@ -1,0 +1,10 @@
+<!-- Contenedor del Spinner con Fondo Opaco -->
+@if(spinnerService.spinnerState | async; as spinnerState ){
+<div class="backdrop" *ngIf="spinnerState.show">
+  <mat-spinner></mat-spinner>
+
+  <!-- <div class="spinner-border" role="status">
+    <span>{{ spinnerState.message }}</span>
+  </div> -->
+</div>
+}

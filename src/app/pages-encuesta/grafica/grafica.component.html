@@ -1,0 +1,62 @@
+<spinner></spinner>
+
+<div id="pdfContent">
+
+    <div class="text-center mb-4 barra-superior">
+        <h3>{{ titulo }}</h3>
+    </div>
+
+    <div class="card m-5" id="cardRadar">
+        <canvas class="chart-container" id="chart">
+            {{chart}}
+        </canvas>
+    </div>
+
+
+    <div class="legend-container d-flex justify-content-center align-items-center mb-6">
+        <strong class="me-3 fs-5">Niveles:</strong>
+        <span class="badge rounded-pill bg-success fs-6 me-2 legend-badge">Alto</span>
+        <span class="badge rounded-pill bg-warning fs-6 text-dark me-2 legend-badge">Medio</span>
+        <span class="badge rounded-pill bg-danger fs-6 legend-badge">Bajo</span>
+    </div>
+
+    <br>
+
+    <div class="d-flex justify-content-center align-items-center mb-4">
+    </div>
+
+    <div class="text-center mb-4">
+
+            <h3 class="mb-2">
+                <strong>Resultados</strong>
+                </h3>
+        <i class="bi bi-arrow-down fs-2 text-secondary"></i>
+    </div>
+
+
+
+    <div class="card m-5 mb-5" id="cardRadar">
+        <div class="cards-container">
+            @for (nivel of datos?.nivel; track $index) {
+            <div class="card" [ngClass]="{
+                    'card-alto': nivel === 'ALTO',
+                    'card-medio': nivel === 'MEDIO',
+                    'card-bajo': nivel === 'BAJO'  
+                }">
+                <h4 class="card-title">
+                    <b>
+                        {{ datos.labels[$index] }}
+                    </b>
+
+                </h4>
+                <p class="card-text">{{ datos.textoRespuesta[$index] }}</p>
+
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="btn btn-primary" (click)="generarPDF()">
+    Descargar ODF
+</div>

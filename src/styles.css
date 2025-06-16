@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+/* Estilos modal excepciones */
+.custom-swal {
+    width: 400px;
+    /* Ajusta el ancho del modal */
+    padding: 0;
+    /* Remueve el padding adicional */
+  }
+  
+  .custom-swal .swal2-popup {
+    padding: 0;
+    /* Remueve el padding adicional */
+  }
+  
+  
+  .swal-wide .swal2-html-container {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    /* Evita que el texto se desborde horizontalmente */
+    white-space: pre-wrap;
+    /* Permite el ajuste de texto */
+  }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,0 +1,31 @@
+/* Margen entre cards */
+.card {
+  border-radius: .5rem;
+  box-shadow: 0 2px 5px rgba(27, 27, 27, 0.1);
+}
+
+/* Ajustes al grupo de botones */
+.btn-group .btn {
+  min-width: 3rem;
+  text-align: center;
+  margin-right: .25rem;
+}
+.btn-group .btn:last-child {
+  margin-right: 0;
+}
+
+/* Active state */
+.btn-group .active {
+  background-color: #448b44;
+  color: #fff;
+  border-color: #217922;
+}
+
+
+/* Estilos para la barra superior */
+.barra-superior {
+  background-color: #31adb9;
+  color: white;
+  padding: 10px 0;
+  font-size: 1.25rem;
+}

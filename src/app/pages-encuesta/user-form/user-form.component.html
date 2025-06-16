@@ -1,0 +1,96 @@
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <h4 class="card-title mb-4 text-center">Registro de usuario</h4>
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+ 
+          <!-- Edad -->
+          <div class="col-md-6">
+            <label for="edad" class="form-label">Edad</label>
+            <input type="number" id="edad" class="form-control" formControlName="edad" placeholder="Ej. 28">
+            <div *ngIf="f.edad.touched && f.edad.invalid" class="invalid-feedback d-block">
+              <div *ngIf="f.edad.errors?.required">La edad es requerida.</div>
+              <div *ngIf="f.edad.errors?.min">Mínimo 0 años.</div>
+              <div *ngIf="f.edad.errors?.max">Máximo 120 años.</div>
+            </div>
+          </div>
+ 
+          <!-- Género -->
+          <div class="col-md-6">
+            <label for="genero" class="form-label">Género</label>
+            <select id="genero" class="form-select" formControlName="genero">
+              <option value="" disabled selected>Selecciona tu género</option>
+              <option *ngFor="let option of genderOptions" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+            <div *ngIf="f.genero.touched && f.genero.invalid" class="invalid-feedback d-block">
+              El género es requerido.
+            </div>
+          </div>
+ 
+          <!-- Nivel de estudios -->
+          <div class="col-md-6">
+            <label for="nivelEstudios" class="form-label">Nivel de estudios</label>
+            <select id="nivelEstudios" class="form-select" formControlName="nivelEstudios">
+              <option value="" disabled selected>Selecciona tu nivel</option>
+              <option *ngFor="let n of educationOptions" [value]="n">{{ n }}</option>
+            </select>
+            <div *ngIf="f.nivelEstudios.touched && f.nivelEstudios.invalid" class="invalid-feedback d-block">
+              El nivel de estudios es requerido.
+            </div>
+          </div>
+ 
+          <!-- Área laboral -->
+          <div class="col-md-6">
+            <label for="areaLaboral" class="form-label">Área laboral</label>
+            <select id="areaLaboral" class="form-select" formControlName="areaLaboral">
+              <option value="" disabled selected>Selecciona tu área</option>
+              <option *ngFor="let a of workAreas" [value]="a">{{ a }}</option>
+            </select>
+            <div *ngIf="f.areaLaboral.touched && f.areaLaboral.invalid" class="invalid-feedback d-block">
+              El área laboral es requerida.
+            </div>
+          </div>
+ 
+          <!-- Correo Electrónico -->
+          <div class="col-md-6">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <input
+              type="email"
+              id="correo"
+              class="form-control"
+              formControlName="correo"
+              placeholder="Ej. usuario@correo.com"
+            >
+            <div *ngIf="f.correo.touched && f.correo.invalid" class="invalid-feedback d-block">
+              <div *ngIf="f.correo.errors?.['required']">El correo es requerido.</div>
+              <div *ngIf="f.correo.errors?.['email']">Formato de correo inválido.</div>
+            </div>
+          </div>
+ 
+ 
+          <!-- País -->
+          <div class="col-md-6">
+            <label for="pais" class="form-label">País</label>
+            <select id="pais" class="form-select" formControlName="pais">
+              <option value="" disabled selected>Selecciona tu país</option>
+              <option *ngFor="let c of countryOptions" [value]="c">{{ c }}</option>
+            </select>
+            <div *ngIf="f.pais.touched && f.pais.invalid" class="invalid-feedback d-block">
+              El país es requerido.
+            </div>
+          </div>
+ 
+        </div>
+ 
+        <hr class="my-4">
+ 
+        <button type="submit" class="btn btn-primary w-100" [disabled]="userForm.invalid">
+          Enviar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
