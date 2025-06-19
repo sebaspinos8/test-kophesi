@@ -117,40 +117,72 @@ export default class RadarChartComponent implements OnInit {
   }
 
 
-  generarPDF() {
+  async generarPDF() {
     const elemento = document.getElementById('pdfContent')!;
-    html2canvas(elemento, { scale: 1, allowTaint: true, useCORS: true })
-      .then(canvas => {
-        const imgData = canvas.toDataURL('image/jpeg',0.7)
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
  
-        // 1) Base64 (sin el prefijo 'data:...')
-        const dataUri = pdf.output('datauristring');
-        const base64PDF = dataUri.split(',')[1];
+    // 1) Configuración jsPDF
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidthMM  = pdf.internal.pageSize.getWidth();
+    const pageHeightMM = pdf.internal.pageSize.getHeight();
  
-        // 2) Prepara tu payload
-        const payload = {
-          filename: 'reporte-encuesta.pdf',
-          file: base64PDF,
-        };
+    // 2) Convierte ancho A4 a px (asumiendo 96dpi)
+    const pxPerMm    = 96 / 25.4;
+    const pageWidthPX = pageWidthMM * pxPerMm;
  
-        const blob = pdf.output('blob');
-        const blobUrl = URL.createObjectURL(blob);
-        window.open(blobUrl, '_blank');
-        console.log({secuencialParticipante: this.secuencialParticipante, base64: base64PDF});
-        this.apiService.sendResults({secuencialParticipante: this.secuencialParticipante, base64: base64PDF}).subscribe(
-          {
-              next:(data:any)=>{
-                this.alertService.showSuccessMessage("Test finalizado, los resultados serán enviados a tu correo enseguida")
-              },
-              error:(error:any)=>{console.log(error)}  
-          });
-
-      })
-      .catch(error => console.error('Error al generar PDF:', error));
+    // 3) Ancho real del elemento en px
+    const elementWidthPX = elemento.scrollWidth;
+ 
+    // 4) Scale para que html2canvas devuelva imagen de ancho ≃ pageWidthPX
+    const scale = pageWidthPX / elementWidthPX;
+ 
+    // 5) Captura con html2canvas usando ese scale
+    const canvas = await html2canvas(elemento, {
+      scale: scale,
+      useCORS: true,
+      scrollY: -window.scrollY
+    });
+ 
+    // 6) Prepara la imagen y propiedades
+    const imgData  = canvas.toDataURL('image/jpeg', 0.7);
+    const imgProps = (pdf as any).getImageProperties(imgData);
+    const imgWidthMM  = pageWidthMM;
+    const imgHeightMM = (imgProps.height * imgWidthMM) / imgProps.width;
+ 
+    // 7) Dibuja la primera página
+    let positionYMM   = 0;
+    pdf.addImage(imgData, 'JPEG', 0, positionYMM, imgWidthMM, imgHeightMM);
+ 
+    // 8) Si la imagen sobrepasa la altura, añade páginas sucesivas
+    let heightLeftMM = imgHeightMM - pageHeightMM;
+    while (heightLeftMM > 0) {
+      positionYMM  -= pageHeightMM;
+      pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', 0, positionYMM, imgWidthMM, imgHeightMM);
+      heightLeftMM -= pageHeightMM;
+    }
+ 
+    // 9) Obtén el Base64 sin prefijo
+    const dataUri    = pdf.output('datauristring');
+    const base64PDF  = dataUri.split(',')[1];
+ 
+    // 10) Envía al servidor
+    this.apiService.sendResults({
+      secuencialParticipante: this.secuencialParticipante,
+      base64: base64PDF
+    }).subscribe({
+      next: (resp: any) => {
+        this.alertService.showSuccessMessage(
+          "Test finalizado, los resultados serán enviados a tu correo enseguida"
+        );
+      },
+      error: (err: any) => {
+        console.error('Error enviando PDF al servidor', err);
+      }
+    });
+ 
+    // 11) (Opcional) abrir en nueva pestaña
+    const blobUrl = pdf.output('bloburl');
+    window.open(blobUrl, '_blank');
   }
 
 
